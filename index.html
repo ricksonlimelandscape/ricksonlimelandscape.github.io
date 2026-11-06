@@ -136,6 +136,27 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px}
 .float{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:40;box-shadow:0 6px 18px rgba(0,0,0,.18)}
 @media (min-width:821px){.float{display:none}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* budget calculator */
+.calc{display:grid;grid-template-columns:1.2fr .8fr;gap:24px;margin-top:24px;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:22px}
+.calc>*{min-width:0}
+.calc fieldset{border:0;margin:0 0 16px;padding:0}
+.calc legend{font-weight:700;margin-bottom:8px;font-size:15px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips label{position:relative}
+.chips input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.chips span{display:inline-block;padding:8px 12px;border:2px solid var(--line);border-radius:999px;font-size:14px;background:var(--paper)}
+.chips input:checked+span{border-color:var(--forest);background:var(--forest);color:#fff}
+.chips input:focus-visible+span{outline:3px solid var(--lime);outline-offset:2px}
+.dims{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:15px}
+.dims input{width:84px;padding:8px 10px;border:2px solid var(--line);border-radius:6px;font-size:16px;font-variant-numeric:tabular-nums}
+.dims input:focus{outline:none;border-color:var(--forest)}
+.calc .out{background:var(--forest);color:#fff;border-radius:6px;padding:20px;display:flex;flex-direction:column;gap:10px;justify-content:center}
+.calc .out .lbl{font-size:13px;color:#cfe0c6}
+.calc .out .amt{font-family:var(--serif);font-size:clamp(30px,5vw,40px);font-weight:800;color:var(--lime);font-variant-numeric:tabular-nums;line-height:1.1}
+.calc .out .why{font-size:13px;color:#d6e3cf}
+.calc .out .wa{background:#fff;color:var(--forest);border-color:#fff;align-self:flex-start}
+@media (max-width:760px){.calc{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -144,7 +165,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px}
   <div class="wrap">
     <a class="brand" href="#top"><img src="lime-logo.png" alt="">Lime Landscape Studio</a>
     <nav aria-label="页面">
-      <a href="#start">远程报价</a><a href="#packages">套餐价钱</a><a href="#process">流程</a><a href="#area">服务地区</a><a href="#faq">常见问题</a>
+      <a href="#start">远程报价</a><a href="#packages">套餐价钱</a><a href="#calc">算价钱</a><a href="#process">流程</a><a href="#area">服务地区</a><a href="#faq">常见问题</a>
     </nav>
     <a class="wa small" data-wa="WEB-TOP" href="https://wa.me/60127333185">WhatsApp</a>
   </div>
@@ -243,6 +264,52 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px}
     </div>
   </section>
 
+
+  <section id="calc">
+    <div class="wrap">
+      <div class="eyebrow">Budget calculator</div>
+      <h2>算一下，你的院子大概多少<span class="en">Estimate your garden in 30 seconds.</span></h2>
+      <form class="calc" id="calcForm" onsubmit="return false">
+        <div>
+          <fieldset>
+            <legend>想做什么？</legend>
+            <div class="chips" id="pkgChips">
+              <label><input type="radio" name="pkg" value="whole" checked><span>新屋整院</span></label>
+              <label><input type="radio" name="pkg" value="front"><span>前院假草 + 卵石</span></label>
+              <label><input type="radio" name="pkg" value="side"><span>侧院踏石 + 植物</span></label>
+              <label><input type="radio" name="pkg" value="grass"><span>种草 + 排水</span></label>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>哪一档？</legend>
+            <div class="chips">
+              <label><input type="radio" name="tier" value="0"><span>Good</span></label>
+              <label><input type="radio" name="tier" value="1" checked><span>Better</span></label>
+              <label><input type="radio" name="tier" value="2"><span>Best</span></label>
+            </div>
+            <p class="fine" id="tierNote" style="margin-top:8px"></p>
+          </fieldset>
+          <fieldset>
+            <legend>大概多大？（尺 ft）</legend>
+            <div class="dims">
+              长 <input id="len" type="number" inputmode="decimal" min="1" step="0.5" aria-label="长（尺）">
+              × 宽 <input id="wid" type="number" inputmode="decimal" min="1" step="0.5" aria-label="宽（尺）">
+              <span id="sqft" class="fine" style="margin:0"></span>
+            </div>
+            <p class="fine" style="margin-top:8px">不知道尺寸？先用默认的标准面积。1 米 ≈ 3.3 尺。</p>
+          </fieldset>
+        </div>
+        <div class="out" aria-live="polite">
+          <div class="lbl">大概价钱 · Estimate</div>
+          <div class="amt" id="amt">RM –</div>
+          <div class="why" id="why"></div>
+          <a class="wa" id="calcWa" href="https://wa.me/60127333185">把这个价钱发给 Rickson</a>
+          <div class="why">实际价钱以照片和报价单为准；面积比标准小也照标准价。</div>
+        </div>
+      </form>
+    </div>
+  </section>
+
   <section id="process">
     <div class="wrap">
       <div class="eyebrow">How it works</div>
@@ -332,6 +399,40 @@ document.querySelectorAll("[data-wa]").forEach(function (a) {
   a.target = "_blank";
   a.rel = "noopener";
 });
+
+// Budget calculator: D-136 package prices (lime-packages-v0.2). Standard area = the listed price;
+// bigger areas add a blended per-sqft rate from the package's surfaces; smaller areas keep the standard price.
+(function () {
+  var P = {
+    whole: { name: "新屋整院", std: 450, dims: [30, 15], price: [5100, 6300, 7500], extra: [8.5, 9.4, 10.6], tiers: ["菲律宾草 + 侧院卵石踏石", "日本草 + 天然石纹踏石 + 植物", "人造草 + 植物 + 狐尾椰 + 花盆"] },
+    front: { name: "前院假草 + 卵石", std: 200, dims: [20, 10], price: [2000, 2400, 2900], extra: [9.1, 9.1, 9.1], tiers: ["假草 + 灰卵石带 + 不锈钢收边", "再加踏步石板、一排矮绿篱", "大石板、绿篱、棕竹、花盆"] },
+    side: { name: "侧院踏石 + 植物", std: 150, dims: [30, 5], price: [2300, 2800, 3400], extra: [15.6, 15.6, 15.6], tiers: ["灰卵石 + 圆形踏步石 + 麦冬", "天然石纹踏步石 + 金边麦冬 + 黄金榕", "再加蕨类、细叶棕竹、花盆"] },
+    grass: { name: "种草 + 排水", std: 300, dims: [20, 15], price: [1900, 2600, 3200], extra: [4.2, 5.6, 5.6], tiers: ["菲律宾草 + 排水管", "日本草 + 排水管", "日本草 + 加长排水 + 草地收边"] }
+  };
+  var f = document.getElementById("calcForm"), len = document.getElementById("len"), wid = document.getElementById("wid");
+  function val(n) { var e = f.querySelector('input[name="' + n + '"]:checked'); return e ? e.value : null; }
+  function round50(x) { return Math.round(x / 50) * 50; }
+  function money(x) { return "RM " + x.toLocaleString("en-MY"); }
+  var lastPkg = null;
+  function update() {
+    var k = val("pkg"), t = +val("tier"), p = P[k];
+    if (k !== lastPkg) { len.value = p.dims[0]; wid.value = p.dims[1]; lastPkg = k; }
+    var a = Math.max(0, (+len.value || 0) * (+wid.value || 0));
+    var area = a || p.std, extra = Math.max(0, area - p.std);
+    var total = Math.max(1500, round50(p.price[t] + extra * p.extra[t]));
+    var tierName = ["Good", "Better", "Best"][t];
+    document.getElementById("sqft").textContent = a ? "≈ " + Math.round(a) + " sqft" : "";
+    document.getElementById("tierNote").textContent = tierName + "：" + p.tiers[t];
+    document.getElementById("amt").textContent = "约 " + money(total);
+    document.getElementById("why").textContent = extra > 0
+      ? "标准 " + p.std + " sqft " + money(p.price[t]) + "，多出约 " + Math.round(extra) + " sqft"
+      : "标准面积 " + p.std + " sqft 以内的价钱";
+    var msg = "Hi Lime，我在网站算了：" + p.name + " " + tierName + "，约 " + Math.round(area) + " sqft，约 " + money(total) + "。想发照片给你看（WEB-CALC）";
+    var w = document.getElementById("calcWa");
+    w.href = "https://wa.me/60127333185?text=" + encodeURIComponent(msg); w.target = "_blank"; w.rel = "noopener";
+  }
+  f.addEventListener("input", update); f.addEventListener("change", update); update();
+})();
 </script>
 </body>
 </html>
