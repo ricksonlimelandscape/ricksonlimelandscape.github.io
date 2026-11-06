@@ -401,13 +401,13 @@ document.querySelectorAll("[data-wa]").forEach(function (a) {
 });
 
 // Budget calculator: D-136 package prices (lime-packages-v0.2). Standard area = the listed price;
-// bigger areas add a blended per-sqft rate from the package's surfaces; smaller areas keep the standard price.
+// bigger areas add the per-sqft rate the Lime OS remote quote uses (Elsa 11/6, cost of 11/6); smaller areas keep the standard price.
 (function () {
   var P = {
-    whole: { name: "新屋整院", std: 450, dims: [30, 15], price: [5100, 6300, 7500], extra: [8.5, 9.4, 10.6], tiers: ["菲律宾草 + 侧院卵石踏石", "日本草 + 天然石纹踏石 + 植物", "人造草 + 植物 + 狐尾椰 + 花盆"] },
-    front: { name: "前院假草 + 卵石", std: 200, dims: [20, 10], price: [2000, 2400, 2900], extra: [9.1, 9.1, 9.1], tiers: ["假草 + 灰卵石带 + 不锈钢收边", "再加踏步石板、一排矮绿篱", "大石板、绿篱、棕竹、花盆"] },
-    side: { name: "侧院踏石 + 植物", std: 150, dims: [30, 5], price: [2300, 2800, 3400], extra: [15.6, 15.6, 15.6], tiers: ["灰卵石 + 圆形踏步石 + 麦冬", "天然石纹踏步石 + 金边麦冬 + 黄金榕", "再加蕨类、细叶棕竹、花盆"] },
-    grass: { name: "种草 + 排水", std: 300, dims: [20, 15], price: [1900, 2600, 3200], extra: [4.2, 5.6, 5.6], tiers: ["菲律宾草 + 排水管", "日本草 + 排水管", "日本草 + 加长排水 + 草地收边"] }
+    whole: { name: "新屋整院", std: 450, dims: [30, 15], price: [5100, 6300, 7500], extra: [10.5, 13.5, 14.5], tiers: ["菲律宾草 + 侧院卵石踏石", "日本草 + 天然石纹踏石 + 植物", "人造草 + 植物 + 狐尾椰 + 花盆"] },
+    front: { name: "前院假草 + 卵石", std: 200, dims: [20, 10], price: [2000, 2400, 2900], extra: [10.5, 12, 13.5], tiers: ["假草 + 灰卵石带 + 不锈钢收边", "再加踏步石板、一排矮绿篱", "大石板、绿篱、棕竹、花盆"] },
+    side: { name: "侧院踏石 + 植物", std: 150, dims: [30, 5], price: [2300, 2800, 3400], extra: [15.5, 19, 20.5], tiers: ["灰卵石 + 圆形踏步石 + 麦冬", "天然石纹踏步石 + 金边麦冬 + 黄金榕", "再加蕨类、细叶棕竹、花盆"] },
+    grass: { name: "种草 + 排水", std: 300, dims: [20, 15], price: [1900, 2600, 3200], extra: [6.5, 8.5, 11], tiers: ["菲律宾草 + 排水管", "日本草 + 排水管", "日本草 + 加长排水 + 草地收边"] }
   };
   var f = document.getElementById("calcForm"), len = document.getElementById("len"), wid = document.getElementById("wid");
   function val(n) { var e = f.querySelector('input[name="' + n + '"]:checked'); return e ? e.value : null; }
